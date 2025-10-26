@@ -2,7 +2,6 @@ package com.codeplatform.service;
 
 import com.codeplatform.dto.ContestResponse;
 import com.codeplatform.entity.Contest;
-import com.codeplatform.entity.Problem;
 import com.codeplatform.repository.ContestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,8 @@ public class ContestService {
 
     @Transactional(readOnly = true)
     public List<ContestResponse> getActiveContests() {
-        return contestRepository.findActiveContests(LocalDateTime.now())
+        LocalDateTime now = LocalDateTime.now();
+        return contestRepository.findByStartTimeBeforeAndEndTimeAfter(now, now)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
